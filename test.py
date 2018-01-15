@@ -1,2 +1,3 @@
-mydictionary = {'keyname' : 'somevalue'}
-print mydictionary.keys()
+from datetime import datetime
+var = datetime.now()
+print var
