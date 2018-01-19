@@ -3,7 +3,6 @@ import datetime
 
 class Spy:
 
-
     def __init__(self,name,salutation,age,rating):
           self.name = name
           self.salutation = salutation
@@ -22,7 +21,7 @@ friends = [friend_one, friend_two, friend_three]
 
 
 class ChatMessage :
-    def __init__(self,message, sent_by_me):
+    def __init__(self, message, sent_by_me):
 
         self.message = message
 

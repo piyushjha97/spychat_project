@@ -2,6 +2,7 @@ from spy_details import spy
 from spy_details import Spy, ChatMessage
 from steganography.steganography import Steganography
 from datetime import datetime
+import csv
 STATUS_MESSAGE = [' ACADVIEW IS AWESOME', ' EAT, SLEEP, CODE, REPEAT',  'ALWAYS SMILE, IT COSTS NOTHING']
 
 friends = []
@@ -76,6 +77,10 @@ def add_friend():
         print "A friend is added."
     else:
         print "Invalid Entry!!"
+        with open('friends.csv', 'a') as friends_data:
+            writer = csv.writer(friends_data)
+            writer.writerow([spy.name, spy.saluation, spy.rating, spy.age, spy.is_online])
+
     return len(friends)
 
 # defining a function for listing friend's details
@@ -119,6 +124,15 @@ def read_message():
 
         friends[sender].chat.append(new_chat)
         print 'your secret message has been saved.'
+
+
+def load_friends():
+    with open('friends.csv', 'rb') as friends_data:
+        reader = csv.reader(friends_data)
+        for row in reader:
+            spy = Spy(name=row[0], salutation=row[1], rating=float(row[2]), age=int(row[3]))
+            friends.append(spy)
+
 
 # defining a chat function
 
