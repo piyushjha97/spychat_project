@@ -3,6 +3,19 @@ from spy_details import Spy, ChatMessage
 from steganography.steganography import Steganography
 from datetime import datetime
 import csv
+
+
+def load_friends():
+    with open('friends.csv', 'rb') as friends_data:    # opening file friends.csv in read mode
+        reader = csv.reader(friends_data)
+        print 'your friend list is below:'
+
+        for row in reader:
+            spy = Spy(name=row[0], salutation=row[1], rating=float(row[2]), age=int(row[3]))
+            friends.append(spy)
+            print row
+
+
 STATUS_MESSAGE = [' ACADVIEW IS AWESOME', ' EAT, SLEEP, CODE, REPEAT',  'ALWAYS SMILE, IT COSTS NOTHING']
 
 friends = []
@@ -60,7 +73,7 @@ def add_status(current_status_message):
     return updated_status_message
 
 
-# defining another function for adding friend:
+# ---------defining another function for adding friend----------------------------
 
 
 def add_friend():
@@ -75,15 +88,15 @@ def add_friend():
     if len(new_friend.name) > 0 and new_friend.age > 12 and new_friend.rating >= spy.rating:
         friends.append(new_friend)
         print "A friend is added."
-    else:
-        print "Invalid Entry!!"
+
         with open('friends.csv', 'a') as friends_data:
             writer = csv.writer(friends_data)
-            writer.writerow([spy.name, spy.saluation, spy.rating, spy.age, spy.is_online])
-
+            writer.writerow([new_friend.name, new_friend.salutation, new_friend.rating, new_friend.age, new_friend.is_online])
+    else:
+        print "Invalid Entry!!"
     return len(friends)
 
-# defining a function for listing friend's details
+# ----------------defining a function for listing friend's details-----------
 
 
 def print_friend():
@@ -91,6 +104,8 @@ def print_friend():
     for friend in friends:
         print '%d. %s whose age is %d and whose rating is %.2f is online' % (item, friend.name, friend.age, friend.rating)
         item = item + 1
+
+# --------------select a friend------------------
 
 
 def select_friend():
@@ -101,6 +116,8 @@ def select_friend():
     friend_choice = input('Choose your friend')
     friend_choice_position = friend_choice - 1
     return friend_choice_position
+
+# ---------------function for sending a secret message-------
 
 
 def send_message():
@@ -115,24 +132,19 @@ def send_message():
     friends[friend_choice].chat.append(new_chat)
     print 'Your secret message image is ready.'
 
+# function for reading a secret message -------
+
 
 def read_message():
         sender = select_friend()
-        output_path = raw_input('What is the name of the file?')
+
+        output_path = raw_input('What is the name of the file you wanna decode?')
         secret_message = Steganography.decode(output_path)
-        new_chat = ChatMessage('', False)
+        print 'Your secret message is: %s' %(secret_message)
+        new_chat = ChatMessage(secret_message, False)
 
-        friends[sender].chat.append(new_chat)
+        friends[sender].chat.append(new_chat)   # appending to chat
         print 'your secret message has been saved.'
-
-
-def load_friends():
-    with open('friends.csv', 'rb') as friends_data:
-        reader = csv.reader(friends_data)
-        for row in reader:
-            spy = Spy(name=row[0], salutation=row[1], rating=float(row[2]), age=int(row[3]))
-            friends.append(spy)
-
 
 # defining a chat function
 
@@ -150,29 +162,39 @@ def start_chat(spy):
 
         while show_menu:
 
-            menu_choices = "What do you wanna do? \n1. Add a status \n2. Add a friend  \n3. Print friend\'s list \n4. Send Message \n5. Close Application \n"
+            menu_choices = "What do you wanna do? \n1. Add a status \n2. Add a friend  \n3. Print friend\'s list \n4. Send Message \n5. read message \n6.close application \n"
             menu_choice = input(menu_choices)
 
             if menu_choice == 1:
+
                 current_status_message = add_status(current_status_message)
+
             elif menu_choice == 2:
+
                 number_of_friends = add_friend()
                 if number_of_friends == 1:
                     print 'you have 1 friend'
                 else:
                     print 'You have %d friends' % (number_of_friends)
+
+
             elif menu_choice == 3:
                 if len(friends) == 0:
                     print 'You don\'t have any friends yet!!!!'
                 else:
                     print 'your friend list is: '
                     friend_list =  print_friend()
+
             elif menu_choice == 4:
                 send_message()
-                read_message()
+
             elif menu_choice == 5:
+                read_message()
+
+            elif menu_choice == 6:
                 print 'BYE BYE !!! SEE YOU AGAIN!!!'
-                show_menu = False
+                show_menu = False    # Close the programme
+
     else:
         print " You are not of correct age to be a spy. "
 
@@ -183,7 +205,7 @@ if existing.upper() == "Y":
 
     start_chat(spy)
 else:
-     spy = Spy('', '', 0,0.0)
+     spy = Spy('', '', 0, 0.0)
 
      spy.name = raw_input("Welcome to spy chat, you must tell me your spy name first: ")
 
@@ -199,3 +221,5 @@ else:
         start_chat(spy)
      else:
         print 'Please add a valid spy name'
+
+# THE E N D !!!!!!
